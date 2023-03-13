@@ -48,3 +48,16 @@ CREATE TABLE IF NOT EXISTS `Voiture`
     PRIMARY KEY(`VoitureNumeroImmatriculation`),
     FOREIGN KEY(`VoitureNumero`) REFERENCES `Proprietaire`(`ProprietaireNumero`) ON DELETE CASCADE
 );
+
+iùport java.util.Random
+Random random = new Random();
+int nb;
+nb = random.nextInt(10);
+
+
+int genererInt(int borneInf, int borneSup){
+ Random random = new Random();
+ int nb;
+ nb = borneInf+random.nextInt(borneSup-borneInf);
+ return nb;
+}
