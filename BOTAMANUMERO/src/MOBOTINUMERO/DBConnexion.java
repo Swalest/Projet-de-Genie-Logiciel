@@ -14,58 +14,60 @@ import java.util.logging.Logger;
  *
  * @author SWALEST
  */
+//La classe de l'établissement de la connexion avec la base de données'
 public class DBConnexion {
-    Connection connecter;
-    Statement stat;
+    public Connection connecter;
+    public Statement stat;
+    public PreparedStatement preStat;
     String url;
     String userName;
     String motPasse;
-    /*try{
-        Class.ForName("com.mysql.jdbc.Driver");
-    }
-    catch(ClassNotFoundException e){
-        System.err.println(e);
-    }*/
-    public DBConnexion(String serevere, String utilisateur, String mot, int poro, String baze){
+    /*
+    Le constructeur nécessitant la connaissance du serveur, du nom de l'utilisateur, 
+    de son mot de passe, de port utilisé et de nom de la base de donnée
+    */
+    public DBConnexion(String serevere, String utilisateur, String mot, int poro, String baze) throws SQLException{
         this.url = "jdbc:mysql://" + serevere + ":" + Integer.toString(poro) + "/" + baze + "?ServerTimezone = UTC";
         this.userName = utilisateur;
         this.motPasse = mot;
+        Charger();
         try{
-            connecter = DriverManager.getConnection(url, userName, mot);
-            stat = connecter.createStatement();
+            //Etablissement de la connexion avec la base de donnée passée en parametre
+            connecter = DriverManager.getConnection(url, userName, motPasse);
         }catch(SQLException ex){
             Logger.getLogger(DBConnexion.class.getName()).log(Level.SEVERE, null, ex);
             System.err.println(ex);
+            connecter.close();
         }
         
     }
-    public DBConnexion(String baze){
+    //Le constructeur lors que l'on connait que le nom de la base de donnée;
+    public DBConnexion(String baze) throws SQLException{
         this.url = "jdbc:mysql://localhost:3306/" + baze + "?ServerTimezone = UTC";
         this.userName = "root";
         this.motPasse = "";
+        Charger();
         try{
-            connecter = DriverManager.getConnection(url, userName, motPasse);
-            stat = connecter.createStatement();
+            //Etablissement de la connexion avec la base de donnée passée en parametre
+            connecter = DriverManager.getConnection(this.url, this.userName, this.motPasse);
         }catch(SQLException e){
-            System.err.println(e);
+            System.out.println(e.getMessage());
             Logger.getLogger(DBConnexion.class.getName()).log(Level.SEVERE, null, e);
+            connecter.close();
+            }
+    }
+    //La méthode du chargement de pilote de SGBD MYSQL: JDBC.DRIVER
+    private void Charger(){
+        try{
+        Class.forName("com.mysql.jdbc.Driver");
         }
-        
+        catch(ClassNotFoundException e){
+            System.err.println(e.getMessage());
+        }
     }
-    
-    public void DBRequetum(String requete) throws SQLException{
-        stat.executeQuery(requete);
-    }
-    public void DBRequeta(String requete, String parametre) throws SQLException{
-        
-    }
-    public ResultSet DBRecupum(String requete) throws SQLException{
-        ResultSet resultat = stat.executeQuery(requete);
-        return resultat;
-    }
-    public ResultSet DBRecupa(String requete, String parametre) throws SQLException{
-        ResultSet resultat = stat.executeQuery(requete);
-        return resultat;
+    //La methode de retour de la connexion
+    public Connection getConnexion(){
+        return connecter;
     }
     
 }

@@ -6,6 +6,31 @@
 
 package MOBOTINUMERO;
 
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
+import java.awt.image.ImageObserver;
+import java.awt.image.RenderedImage;
+import java.awt.image.renderable.RenderableImage;
+import java.awt.print.*;
+import java.io.File;
+import java.sql.*;
+import java.text.AttributedCharacterIterator;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author SWALEST
@@ -15,8 +40,12 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
     /**
      * Creates new form ACCUEIL
      */
-    public ACCUEIL() {
+    public SystemeMobotiNumero() {
         initComponents();
+        jComboInstitution.setVisible(false);
+        jLabelInstitution.setVisible(false);
+        jRadioHomme.setSelected(true);
+        
     }
 
     /**
@@ -67,16 +96,16 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         jTextFieldMarque = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
-        jTextFieldNumReception = new javax.swing.JTextField();
+        jTextFieldSerie = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jTextFieldCarburant = new javax.swing.JTextField();
         jTextFieldModele = new javax.swing.JTextField();
         jTextFieldPoids = new javax.swing.JTextField();
-        jTextFieldNumReception1 = new javax.swing.JTextField();
-        jTextFieldNumReception2 = new javax.swing.JTextField();
-        jTextFieldNumReception3 = new javax.swing.JTextField();
+        jTextFieldCNIT = new javax.swing.JTextField();
+        jTextFieldNumReception = new javax.swing.JTextField();
+        jTextFieldNumChassis = new javax.swing.JTextField();
         jPanelPersonne = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         jLabelNom = new javax.swing.JLabel();
@@ -101,23 +130,65 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
         jButtonEditer = new javax.swing.JButton();
         jButtonSupprimer = new javax.swing.JButton();
         TabBordereau = new javax.swing.JDesktopPane();
-        jPanel9 = new javax.swing.JPanel();
+        jPanelCertificat = new javax.swing.JPanel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabelDate = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        jLabelModele = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
+        jLabel30 = new javax.swing.JLabel();
+        jLabel31 = new javax.swing.JLabel();
+        jLabel32 = new javax.swing.JLabel();
+        jLabel33 = new javax.swing.JLabel();
+        jLabel34 = new javax.swing.JLabel();
+        jPanel12 = new javax.swing.JPanel();
+        jLabelLieu1 = new javax.swing.JLabel();
+        jLabel36 = new javax.swing.JLabel();
+        jLabel37 = new javax.swing.JLabel();
+        jLabel38 = new javax.swing.JLabel();
+        jLabelProprietaire = new javax.swing.JLabel();
+        jLabelAdresse = new javax.swing.JLabel();
+        jLabelMail = new javax.swing.JLabel();
+        jLabelImmatricule = new javax.swing.JLabel();
+        jLabelSerie = new javax.swing.JLabel();
+        jLabelChassis = new javax.swing.JLabel();
+        jLabel35 = new javax.swing.JLabel();
+        jLabelMarque = new javax.swing.JLabel();
+        jLabelCarburant = new javax.swing.JLabel();
+        jLabelPoids = new javax.swing.JLabel();
+        jLabelReception = new javax.swing.JLabel();
+        jLabelCNIT = new javax.swing.JLabel();
+        jLabelLieu = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         jButtonElaborer = new javax.swing.JButton();
+        jButtonImprimer = new javax.swing.JButton();
         TabDocumentation = new javax.swing.JDesktopPane();
         jLabel4 = new javax.swing.JLabel();
         jPanel11 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPaneDocumentation = new javax.swing.JTextPane();
+        jLabel27 = new javax.swing.JLabel();
 
         jLabel12.setText("jLabel12");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         TabbedSysteme.setFocusTraversalPolicyProvider(true);
         TabbedSysteme.setFont(new java.awt.Font("Sylfaen", 1, 18)); // NOI18N
+        TabbedSysteme.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TabbedSystemeMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                TabbedSystemeMouseEntered(evt);
+            }
+        });
 
         TabAccueil.setBackground(new java.awt.Color(204, 204, 255));
         TabAccueil.setFont(new java.awt.Font("Sylfaen", 1, 14)); // NOI18N
@@ -131,7 +202,7 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
         jLabel5.setText("PROVINCE");
 
         jComboProvince.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
-        jComboProvince.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboProvince.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Bas-Uele", "Equateur", "Haut-Katanga", "Haut-Lomani", "Haut-Uele", "Ituri", "Kasaï", "Kasaï Central", "Kasaï Oriental", "Kinshasa", "Kongo -Central", "Kwango", "Kwilu", "Lomami", "Lualaba", "Mai-Ndombe", "Maniema", "Mongala", "Nord-Kivu", "Nord-Ubangi", "Sankuru", "Sud-Kivu", "Sud-Ubangi", "Tanganyika", "Tshopo", "Tshuapa" }));
 
         jPanel3.setBackground(new java.awt.Color(240, 204, 255));
 
@@ -141,10 +212,25 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
         buttonGroup1.add(jRadioPersonne);
         jRadioPersonne.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
         jRadioPersonne.setText("Personne");
+        jRadioPersonne.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jRadioPersonneMouseClicked(evt);
+            }
+        });
+        jRadioPersonne.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioPersonneActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(jRadioInstitution);
         jRadioInstitution.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
         jRadioInstitution.setText("Institution");
+        jRadioInstitution.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioInstitutionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -177,7 +263,7 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
         jLabelInstitution.setText("INSTITUTION");
 
         jComboInstitution.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
-        jComboInstitution.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboInstitution.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Agent Cadre", "Assemblée Nationale", "Communal", "Corps Consulaire", "Corps Diplomatique", "EUPOL", "EUSEC", "Gouvernorat", "Justice", "Haut Fonctionnaire", "Militaire", "Ministère", "MONUC", "ONU", "Police", "Présidence", "Professeur", "Sénat", "Temporel", "Territorial", " " }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -224,16 +310,24 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
         jPanel2.setBounds(10, 50, 460, 250);
 
         jLabelFormer.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
-        jLabelFormer.setText("jLabel7");
 
         jLabelGenerer.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
-        jLabelGenerer.setText("jLabel7");
 
         jButtonFormer.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
         jButtonFormer.setText("FORMER NUMERO");
+        jButtonFormer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFormerActionPerformed(evt);
+            }
+        });
 
         jButtonGenerer.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
         jButtonGenerer.setText("GENERER NUMERO");
+        jButtonGenerer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonGenererActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -246,27 +340,23 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
                     .addComponent(jLabelFormer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButtonGenerer, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))
                 .addGap(73, 73, 73))
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGap(75, 75, 75)
-                    .addComponent(jLabelGenerer, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(75, Short.MAX_VALUE)))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(64, 64, 64)
+                .addComponent(jLabelGenerer, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(70, Short.MAX_VALUE)
+                .addContainerGap(18, Short.MAX_VALUE)
+                .addComponent(jLabelGenerer, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jButtonGenerer, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addComponent(jLabelFormer, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButtonFormer, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGap(21, 21, 21)
-                    .addComponent(jLabelGenerer, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(195, Short.MAX_VALUE)))
         );
 
         TabAccueil.add(jPanel4);
@@ -275,8 +365,7 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
         jLabel7.setText("NUMERO DE PLAQUE D'IMMATRICULATION");
 
-        jLabelPlaque.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
-        jLabelPlaque.setText("jLabel8");
+        jLabelPlaque.setFont(new java.awt.Font("Sylfaen", 1, 24)); // NOI18N
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -304,6 +393,21 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
 
         jButtonFermer.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
         jButtonFermer.setText("FERMER");
+        jButtonFermer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonFermerMouseClicked(evt);
+            }
+        });
+        jButtonFermer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFermerActionPerformed(evt);
+            }
+        });
+        jButtonFermer.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jButtonFermerKeyPressed(evt);
+            }
+        });
         TabAccueil.add(jButtonFermer);
         jButtonFermer.setBounds(370, 440, 200, 40);
 
@@ -320,8 +424,7 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
         jLabel8.setText("NUMERO DE PLAQUE D'IMMATRICULATION");
 
-        jLabelPlaqueVoiture.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
-        jLabelPlaqueVoiture.setText("jLabel9");
+        jLabelPlaqueVoiture.setFont(new java.awt.Font("Sylfaen", 1, 24)); // NOI18N
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -339,7 +442,7 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabelPlaqueVoiture, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -368,7 +471,7 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
         jLabel18.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
         jLabel18.setText("Marque");
 
-        jTextFieldNumReception.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jTextFieldSerie.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
 
         jLabel19.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
         jLabel19.setText("Modèle");
@@ -385,16 +488,16 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
 
         jTextFieldPoids.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
 
-        jTextFieldNumReception1.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
-        jTextFieldNumReception1.addActionListener(new java.awt.event.ActionListener() {
+        jTextFieldCNIT.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jTextFieldCNIT.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldNumReception1ActionPerformed(evt);
+                jTextFieldCNITActionPerformed(evt);
             }
         });
 
-        jTextFieldNumReception2.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jTextFieldNumReception.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
 
-        jTextFieldNumReception3.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jTextFieldNumChassis.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -414,66 +517,59 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
                             .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldCNIT, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextFieldNumReception, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldNumReception1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldNumReception2, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldNumReception3, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextFieldNumChassis, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel8Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(10, 10, 10))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(19, 19, 19)))))
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldModele, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldMarque, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldCarburant, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextFieldPoids, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jTextFieldMarque, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                    .addComponent(jTextFieldCarburant, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldModele)
+                    .addComponent(jTextFieldPoids))
+                .addGap(28, 28, 28))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGap(0, 5, Short.MAX_VALUE)
+                        .addGap(0, 11, Short.MAX_VALUE)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldNumReception2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextFieldNumReception, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(22, 22, 22)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jTextFieldMarque, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jTextFieldNumReception3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jTextFieldNumChassis, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel14))
                         .addGap(22, 22, 22)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextFieldCarburant, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldNumReception, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextFieldSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(25, 25, 25)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextFieldPoids, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldNumReception1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jTextFieldCNIT, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jTextFieldModele, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -620,6 +716,11 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
 
         jButtonImmatriculer.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
         jButtonImmatriculer.setText("IMMATRICULER");
+        jButtonImmatriculer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonImmatriculerActionPerformed(evt);
+            }
+        });
         TabImmatriculer.add(jButtonImmatriculer);
         jButtonImmatriculer.setBounds(200, 420, 190, 40);
 
@@ -636,15 +737,17 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
         jTableVoiture.setFont(new java.awt.Font("Sylfaen", 1, 10)); // NOI18N
         jTableVoiture.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "NUMERO D'IMMATRICALATION", "NUMERO DE RECEPTION", "NUMERO CHASSIS", "NUMERO SERIE", "CNIT", "MODELE", "MARQUE", "POIDS", "PROVINCE", "PROPRIETAIRE", "ADRESSE DU PROPRIETAIRE", "MAIL DU PROPRIETAIRE"
             }
         ));
+        jTableVoiture.setFocusable(false);
+        jTableVoiture.setRowHeight(25);
         jScrollPane1.setViewportView(jTableVoiture);
 
         TabVoiture.add(jScrollPane1);
@@ -652,11 +755,21 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
 
         jButtonEditer.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
         jButtonEditer.setText("EDITER");
+        jButtonEditer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEditerActionPerformed(evt);
+            }
+        });
         TabVoiture.add(jButtonEditer);
         jButtonEditer.setBounds(110, 440, 130, 40);
 
         jButtonSupprimer.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
         jButtonSupprimer.setText("SUPPRIMER");
+        jButtonSupprimer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSupprimerActionPerformed(evt);
+            }
+        });
         TabVoiture.add(jButtonSupprimer);
         jButtonSupprimer.setBounds(593, 440, 150, 40);
 
@@ -664,15 +777,259 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
 
         TabBordereau.setBackground(new java.awt.Color(204, 204, 255));
 
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        jLabel23.setFont(new java.awt.Font("Sylfaen", 3, 18)); // NOI18N
+        jLabel23.setText("CERTIFICAT D'IMMATRICULATION DE VOITURE");
+
+        jLabelDate.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabelDate.setText("le 20 Décembre 2023");
+
+        jLabel25.setFont(new java.awt.Font("Sylfaen", 1, 24)); // NOI18N
+        jLabel25.setText("REPUBLIQUE DEMOCRATIQUE DU CONGO");
+
+        jLabel24.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabel24.setText("NUMERO SERIE:");
+
+        jLabel26.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabel26.setText("IMMATRICULE: ");
+
+        jLabelModele.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabelModele.setText("MODELE: ");
+
+        jLabel28.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabel28.setText("NUMERO CHASSIS:");
+
+        jLabel29.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabel29.setText("NUMERO RECEPTION: ");
+
+        jLabel30.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabel30.setText("CNIT: ");
+
+        jLabel31.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabel31.setText("MARQUE: ");
+
+        jLabel32.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabel32.setText("CARBURANT: ");
+
+        jLabel33.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabel33.setText("LIEU D'OPERATION: ");
+
+        jLabel34.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabel34.setText("POIDS: ");
+
+        jLabelLieu1.setFont(new java.awt.Font("Sylfaen", 3, 14)); // NOI18N
+        jLabelLieu1.setText("ZONE DU PROPRIETAIRE");
+
+        jLabel36.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabel36.setText("PROPRITAIRE: ");
+
+        jLabel37.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabel37.setText("ADRESSE: ");
+
+        jLabel38.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabel38.setText("MAIL: ");
+
+        jLabelProprietaire.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabelProprietaire.setText("PROPRITAIRE: ");
+
+        jLabelAdresse.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabelAdresse.setText("ADRESSE: ");
+
+        jLabelMail.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabelMail.setText("MAIL: ");
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel38)
+                            .addComponent(jLabel36))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabelProprietaire, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                            .addComponent(jLabelAdresse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelMail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(30, 30, 30))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addComponent(jLabel37)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGap(93, 93, 93)
+                .addComponent(jLabelLieu1, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 433, Short.MAX_VALUE)
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelLieu1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel36, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelProprietaire, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelAdresse, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelMail, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+
+        jLabelImmatricule.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabelImmatricule.setText("IMMATRICULE: ");
+
+        jLabelSerie.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabelSerie.setText("NUMERO SERIE:");
+
+        jLabelChassis.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabelChassis.setText("NUMERO CHASSIS:");
+
+        jLabel35.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabel35.setText("MODELE: ");
+
+        jLabelMarque.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabelMarque.setText("MARQUE: ");
+
+        jLabelCarburant.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabelCarburant.setText("CARBURANT: ");
+
+        jLabelPoids.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabelPoids.setText("POIDS: ");
+
+        jLabelReception.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabelReception.setText("NUMERO RECEPTION: ");
+
+        jLabelCNIT.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabelCNIT.setText("CNIT: ");
+
+        jLabelLieu.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jLabelLieu.setText("LIEU D'OPERATION: ");
+
+        javax.swing.GroupLayout jPanelCertificatLayout = new javax.swing.GroupLayout(jPanelCertificat);
+        jPanelCertificat.setLayout(jPanelCertificatLayout);
+        jPanelCertificatLayout.setHorizontalGroup(
+            jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCertificatLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel35, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCertificatLayout.createSequentialGroup()
+                        .addComponent(jLabelImmatricule, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(jLabel29)
+                        .addContainerGap(310, Short.MAX_VALUE))
+                    .addGroup(jPanelCertificatLayout.createSequentialGroup()
+                        .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabelSerie, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelChassis, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                            .addComponent(jLabelModele, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelMarque, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelCarburant, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelPoids, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanelCertificatLayout.createSequentialGroup()
+                                .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCertificatLayout.createSequentialGroup()
+                                        .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabelCNIT, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabelReception, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(36, 36, 36))
+                                    .addComponent(jLabelLieu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap())))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCertificatLayout.createSequentialGroup()
+                .addGap(71, 71, 71)
+                .addComponent(jLabel23)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelDate, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22))
+            .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelCertificatLayout.createSequentialGroup()
+                    .addGap(156, 156, 156)
+                    .addComponent(jLabel25)
+                    .addContainerGap(227, Short.MAX_VALUE)))
+        );
+        jPanelCertificatLayout.setVerticalGroup(
+            jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCertificatLayout.createSequentialGroup()
+                .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelCertificatLayout.createSequentialGroup()
+                        .addGap(61, 61, 61)
+                        .addComponent(jLabelDate, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCertificatLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCertificatLayout.createSequentialGroup()
+                        .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelReception, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelCNIT, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelLieu, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCertificatLayout.createSequentialGroup()
+                        .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelImmatricule, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelChassis, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(16, 16, 16)
+                        .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel35, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelModele, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelMarque, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelCarburant, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelPoids, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(19, 19, 19))
+            .addGroup(jPanelCertificatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelCertificatLayout.createSequentialGroup()
+                    .addGap(21, 21, 21)
+                    .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(346, Short.MAX_VALUE)))
         );
 
         jLabel22.setFont(new java.awt.Font("Sylfaen", 1, 24)); // NOI18N
@@ -680,51 +1037,72 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
 
         jButtonElaborer.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
         jButtonElaborer.setText("ELABORER");
-        jButtonElaborer.setActionCommand("ELABORER");
+        jButtonElaborer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonElaborerActionPerformed(evt);
+            }
+        });
+
+        jButtonImprimer.setFont(new java.awt.Font("Sylfaen", 1, 12)); // NOI18N
+        jButtonImprimer.setText("IMPRIMER");
+        jButtonImprimer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonImprimerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout TabBordereauLayout = new javax.swing.GroupLayout(TabBordereau);
         TabBordereau.setLayout(TabBordereauLayout);
         TabBordereauLayout.setHorizontalGroup(
             TabBordereauLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(TabBordereauLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(TabBordereauLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(TabBordereauLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanelCertificat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(TabBordereauLayout.createSequentialGroup()
+                        .addGap(138, 138, 138)
+                        .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36)
+                        .addComponent(jButtonElaborer, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(TabBordereauLayout.createSequentialGroup()
-                .addGap(138, 138, 138)
-                .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(jButtonElaborer, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addGap(350, 350, 350)
+                .addComponent(jButtonImprimer, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         TabBordereauLayout.setVerticalGroup(
             TabBordereauLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, TabBordereauLayout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addGroup(TabBordereauLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(TabBordereauLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(TabBordereauLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jButtonElaborer, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)))
+                    .addComponent(jButtonElaborer))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanelCertificat, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonImprimer, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        TabBordereau.setLayer(jPanel9, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        TabBordereau.setLayer(jPanelCertificat, javax.swing.JLayeredPane.DEFAULT_LAYER);
         TabBordereau.setLayer(jLabel22, javax.swing.JLayeredPane.DEFAULT_LAYER);
         TabBordereau.setLayer(jButtonElaborer, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        TabBordereau.setLayer(jButtonImprimer, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        TabbedSysteme.addTab("BORDEREAU", TabBordereau);
+        TabbedSysteme.addTab("CERTIFICAT", TabBordereau);
 
         TabDocumentation.setBackground(new java.awt.Color(204, 204, 255));
         TabDocumentation.setFont(new java.awt.Font("Sylfaen", 1, 14)); // NOI18N
 
-        jLabel4.setFont(new java.awt.Font("Sylfaen", 1, 24)); // NOI18N
-        jLabel4.setText("SYSTEME D'IMMATRICULATION DE VOITURE");
+        jLabel4.setFont(new java.awt.Font("Sylfaen", 3, 18)); // NOI18N
+        jLabel4.setText("Manuel de fonctionnement de MOBOTINUMERO");
         TabDocumentation.add(jLabel4);
-        jLabel4.setBounds(160, 10, 560, 40);
+        jLabel4.setBounds(220, 60, 430, 30);
 
         jTextPaneDocumentation.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jTextPaneDocumentation.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jTextPaneDocumentation.setFocusable(false);
         jScrollPane2.setViewportView(jTextPaneDocumentation);
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
@@ -738,14 +1116,18 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         TabDocumentation.add(jPanel11);
-        jPanel11.setBounds(10, 50, 890, 430);
+        jPanel11.setBounds(10, 90, 890, 390);
+
+        jLabel27.setFont(new java.awt.Font("Sylfaen", 1, 24)); // NOI18N
+        jLabel27.setText("SYSTEME D'IMMATRICULATION DE VOITURE");
+        TabDocumentation.add(jLabel27);
+        jLabel27.setBounds(160, 10, 560, 40);
 
         TabbedSysteme.addTab("DOCUMENTATION", TabDocumentation);
 
@@ -760,30 +1142,666 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TabbedSysteme))
-                .addGap(0, 0, 0))
+                .addComponent(TabbedSysteme, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldNumReception1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNumReception1ActionPerformed
+    private void jTextFieldCNITActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCNITActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldNumReception1ActionPerformed
+    }//GEN-LAST:event_jTextFieldCNITActionPerformed
+
+    private void jButtonFermerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFermerActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+    }//GEN-LAST:event_jButtonFermerActionPerformed
+
+    private void jButtonFermerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonFermerMouseClicked
+        // TODO add your handling code
+        //System.exit(0);
+    }//GEN-LAST:event_jButtonFermerMouseClicked
+
+    private void jButtonFermerKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonFermerKeyPressed
+        // TODO add your handling code here:
+        //System.exit(0);
+    }//GEN-LAST:event_jButtonFermerKeyPressed
+
+    private void jButtonGenererActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGenererActionPerformed
+        // TODO add your handling code here:
+        jLabelGenerer.setText(new FormationNumero().GenererNumero());
+    }//GEN-LAST:event_jButtonGenererActionPerformed
+
+    private void jRadioPersonneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioPersonneActionPerformed
+        // TODO add your handling code here:
+        jLabelInstitution.setVisible(false);
+        jComboInstitution.setVisible(false);
+        jPanelPersonne.setVisible(true);
+        jPanel10.setBounds(610, 330, 290, 150);
+        
+    }//GEN-LAST:event_jRadioPersonneActionPerformed
+
+    private void jRadioInstitutionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioInstitutionActionPerformed
+        // TODO add your handling code here:
+        jLabelInstitution.setVisible(true);
+        jComboInstitution.setVisible(true);
+        jPanelPersonne.setVisible(false);
+        jPanel10.setBounds(610, 110, 290, 150);
+    }//GEN-LAST:event_jRadioInstitutionActionPerformed
+
+    private void TabbedSystemeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabbedSystemeMouseClicked
+        jLabelPlaqueVoiture.setText(jLabelPlaque.getText());
+        jLabelPlaqueVoiture.setOpaque(true);
+        jLabelPlaque.setOpaque(true);
+        jLabelPlaqueVoiture.setBackground(jLabelPlaque.getBackground());
+        jTextPaneDocumentation.setText("Ce logiciel a cinq(5) onglets:\n1. Onglet Acceuil;\n2. Onglet Immatriculer;\n3. Onglet Voiture;\n4. Certificat;\n5. Onglet Documentation.\n\n\t\t1. ONGLET ACCEUIL\n\tDans cet onglet on doit choisir la province dans laquelle la voiture à immatrculer sera opérationnelle. Après on doit choisir le propriétaire de la voiture qui peut etre une personne ou une institution publique que privée. Si vous avez choisi une institution comme propriétaire de la voiture, vous devez selectionner une institution dans le champs qui va apparaitre. vous allez appuyer sur le bouton GENERER NUMERO pour générer automatiquement un numéro et après vous appuyer le bouton FORMER NUMERO pour former un nuémro d'immatriculation. Vous devez commencer à générer un numéro avant de le former. Vous passerez à l'onglet immatriculer après avoir fait tout ce qui est recommandé au niveau de l'onglet acceuil.\n\n\t\tONGLET IMMATRICULER\n\tDans cet onglet vous devez renseigner tous les champs avant de cliquer sur le bouton  IMMATRICULER. Le poids de la voiture doit etrê un réel supérieur à 100.\n\n\t\tONGLET VOITURE \n\tCet onglet affiche toutes les voitures déjà immatriculées. Pour éditer une voiture vous devez selectionner la voiture à éditer, et après vous appuyer le bouton EDITER. Vous devez renseigner tous les champs qui vont s'afficher progressivement en appuiyant toujours sur le bouton OK même si vous n'avez pas modifier la valeur; vous devez le faire pour maintenir cette valeur. Il ne faut pas oublier que le poids doit être un nombre réel supérieur à 100. Pour supprimer une voiture vous devez selectionner la voiture que vous voulez supprimer et après vous appyer le bouton SUPPRIMER. Pour éditer et supprimer, vous devez toujours confimer l'action.\n\n\t\tONGLET CERTIFICAT\n\tAprès avoir immatricule une voiture vous accédez à l'onglet CERTIFICAT pour imprimer un certificat d'immatriculation de la voiture en appyant sur le bouton IMPRIMER; une fenetre va s'ouvrir où vous vous vous devez modifier l'orientation en appuyant sur le bouton PROPERTIES en selectionnant Landscape à la place du Portrait. Vous pouvez élabore le certificat de la voiture déja immatriculée en appuyant sur le bouton ELABORER et en renseignant le numéro d'immatriculation de la voiture que vous voulez élaborer son certificat; enfin vous pouver imprimer le certificat en appuyant sur le bouton IMPRIMER. le fichier imprimer peut être imprimer après.\n\n\t\tONGLET DOCUMENTATION\n\tIci a les renseignement nécessaires pour le bon fonctionnement de ce dit logiciel; que vous devez lire et comprendre afin de pouvoir bien utiliser ce logiciel.\n\n\nMERCI\n\n\nAUTEURS:\nAMULI MWENYIMALI Jean\nMUBWANA SATALA Michée\nWATEGA ALIMASI Sébastien(Swalest).\n\nCONTACTS:\n+243824599074\n+243811495864\n+243895268726");
+        
+    }//GEN-LAST:event_TabbedSystemeMouseClicked
+
+    private void TabbedSystemeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabbedSystemeMouseEntered
+        // TODO add your handling code here:
+        jLabelPlaqueVoiture.setText(jLabelPlaque.getText());
+        jLabelPlaqueVoiture.setOpaque(true);
+        jLabelPlaque.setOpaque(true);
+        jLabelPlaqueVoiture.setBackground(jLabelPlaque.getBackground());
+        jTextPaneDocumentation.setText("Ce logiciel a cinq(5) onglets:\n1. Onglet Acceuil;\n2. Onglet Immatriculer;\n3. Onglet Voiture;\n4. Certificat;\n5. Onglet Documentation.\n\n\t\t1. ONGLET ACCEUIL\n\tDans cet onglet on doit choisir la province dans laquelle la voiture à immatrculer sera opérationnelle. Après on doit choisir le propriétaire de la voiture qui peut etre une personne ou une institution publique que privée. Si vous avez choisi une institution comme propriétaire de la voiture, vous devez selectionner une institution dans le champs qui va apparaitre. vous allez appuyer sur le bouton GENERER NUMERO pour générer automatiquement un numéro et après vous appuyer le bouton FORMER NUMERO pour former un nuémro d'immatriculation. Vous devez commencer à générer un numéro avant de le former. Vous passerez à l'onglet immatriculer après avoir fait tout ce qui est recommandé au niveau de l'onglet acceuil.\n\n\t\tONGLET IMMATRICULER\n\tDans cet onglet vous devez renseigner tous les champs avant de cliquer sur le bouton  IMMATRICULER. Le poids de la voiture doit etrê un réel supérieur à 100.\n\n\t\tONGLET VOITURE \n\tCet onglet affiche toutes les voitures déjà immatriculées. Pour éditer une voiture vous devez selectionner la voiture à éditer, et après vous appuyer le bouton EDITER. Vous devez renseigner tous les champs qui vont s'afficher progressivement en appuiyant toujours sur le bouton OK même si vous n'avez pas modifier la valeur; vous devez le faire pour maintenir cette valeur. Il ne faut pas oublier que le poids doit être un nombre réel supérieur à 100. Pour supprimer une voiture vous devez selectionner la voiture que vous voulez supprimer et après vous appyer le bouton SUPPRIMER. Pour éditer et supprimer, vous devez toujours confimer l'action.\n\n\t\tONGLET CERTIFICAT\n\tAprès avoir immatricule une voiture vous accédez à l'onglet CERTIFICAT pour imprimer un certificat d'immatriculation de la voiture en appyant sur le bouton IMPRIMER; une fenetre va s'ouvrir où vous vous vous devez modifier l'orientation en appuyant sur le bouton PROPERTIES en selectionnant Landscape à la place du Portrait. Vous pouvez élabore le certificat de la voiture déja immatriculée en appuyant sur le bouton ELABORER et en renseignant le numéro d'immatriculation de la voiture que vous voulez élaborer son certificat; enfin vous pouver imprimer le certificat en appuyant sur le bouton IMPRIMER. le fichier imprimer peut être imprimer après.\n\n\t\tONGLET DOCUMENTATION\n\tIci a les renseignement nécessaires pour le bon fonctionnement de ce dit logiciel; que vous devez lire et comprendre afin de pouvoir bien utiliser ce logiciel.\n\n\nMERCI\n\n\nAUTEURS:\nAMULI MWENYIMALI Jean\nMUBWANA SATALA Michée\nWATEGA ALIMASI Sébastien(Swalest).\n\nCONTACTS:\n+243824599074\n+243811495864\n+243895268726");
+    }//GEN-LAST:event_TabbedSystemeMouseEntered
+
+    private void jButtonFormerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFormerActionPerformed
+        // TODO add your handling code here:
+        if("".equals(jLabelGenerer.getText())){
+            JOptionPane.showMessageDialog(null, "Vous devez commencer par générer le numéro avant de le former", "Suggestion", 2);
+        }
+        else{
+            String nomProp;
+        if(jRadioPersonne.isSelected()){
+            nomProp = "personne";
+        }
+        else if(jRadioInstitution.isSelected()){
+            nomProp = jComboInstitution.getSelectedItem().toString();
+            nomProp = nomProp.toLowerCase();
+        }
+        else{
+            nomProp = "";
+        }
+        String nomProv = jComboProvince.getSelectedItem().toString();
+        nomProv = nomProv.toLowerCase();
+        String [] voitNumero = new FormationNumero().FormerNumero(nomProp, nomProv, jLabelGenerer.getText(), jTextFieldAdresse.getText(), jTextFieldMail.getText());
+        jLabelFormer.setText(voitNumero[2] + voitNumero[0]);
+        voitMneumo = voitNumero[2];
+        jLabelPlaque.setText(voitNumero[2] + voitNumero[0] + "\\" + voitNumero[1]);
+        jLabelPlaqueVoiture.setText(jLabelPlaque.getText());
+        jLabelPlaqueVoiture.setOpaque(true);
+        jLabelPlaque.setOpaque(true);
+        jLabelPlaque.setBackground(Color.getHSBColor(150, 100, 200));
+        jLabelPlaqueVoiture.setBackground(jLabelPlaque.getBackground());
+        }
+        
+    }//GEN-LAST:event_jButtonFormerActionPerformed
+
+    private void jRadioPersonneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadioPersonneMouseClicked
+        // TODO add your handling code here:
+        jLabelInstitution.setVisible(false);
+        jComboInstitution.setVisible(false);
+        jPanelPersonne.setVisible(true);
+        jPanel10.setBounds(610, 330, 290, 150);
+    }//GEN-LAST:event_jRadioPersonneMouseClicked
+
+    //La méthode qui permet d'afficher toutes les voitures déjà immatriculées
+    public void AfficherVoiture() throws SQLException{
+        DefaultTableModel modele;
+        ResultSet resultatVoiture;
+        ResultSet resultatPerso;
+        ResultSet resultatInstit;
+        PreparedStatement preStatit;
+        ResultSet resultatPropri;
+        String [] resVoiture = new String[13];
+        Statement stat;
+        String provin;
+        DBConnexion baseDonnee;
+        Connection connectarium;
+        baseDonnee = new DBConnexion("ParcVoiture");
+        String [] voiture = {"NUMERO D'IMMATRICULATION", "NUMERO RECEPTION", "NUMERO SERIE", "NUMERO CHASSIS", "CNIT", "MODELE", "MARQUE", "CARBURANT", "PROVINCE", "PROPRIETAIRE", "ADRESSE DU PROPRIETAIRE", "MAIL DU PROPRIETAIRE"};
+        modele = new DefaultTableModel(null, voiture);
+        connectarium = baseDonnee.getConnexion();
+        stat = connectarium.createStatement();
+         resultatVoiture = stat.executeQuery("SELECT * FROM `Voiture`");
+         try{
+             while(resultatVoiture.next()){
+                int debut = resultatVoiture.getString("VoitureNumeroImmatriculation").length() - 2;
+                int fin = resultatVoiture.getString("VoitureNumeroImmatriculation").length();
+                String chaine = resultatVoiture.getString("VoitureNumeroImmatriculation").substring(debut,fin);
+                provin = new Province(chaine).getMneumoniqueProv();
+                resVoiture[0] = resultatVoiture.getString("VoitureNumeroImmatriculation");
+                resVoiture[1] = resultatVoiture.getString("VoitureNumeroReception");
+                resVoiture[2] = resultatVoiture.getString("VoitureNumeroSerie");
+                resVoiture[3] = resultatVoiture.getString("VoitureNumeroChassis");
+                resVoiture[4] = resultatVoiture.getString("VoitureCNIT");
+                resVoiture[5] = resultatVoiture.getString("VoitureModele");
+                resVoiture[6] = resultatVoiture.getString("VoitureMarque");
+                resVoiture[7] = resultatVoiture.getString("VoitureCarburant");
+                resVoiture[8] = provin;
+                preStatit = connectarium.prepareStatement("SELECT `ProprietaireAdresse`, `ProprietaireMail` FROM `Proprietaire` WHERE `ProprietaireNumero` = ?");
+                preStatit.setInt(1, resultatVoiture.getInt("VoitureNumero"));
+                resultatPropri = preStatit.executeQuery();
+                preStatit = connectarium.prepareStatement("SELECT `PersonneNom`, `PersonnePrenom` FROM `Personne` WHERE `PersonneNumero` = ?");
+                preStatit.setInt(1, resultatVoiture.getInt("VoitureNumero"));
+                resultatPerso = preStatit.executeQuery();
+                preStatit = connectarium.prepareStatement("SELECT `InstitutionLibelle` FROM `Institution` WHERE `InstitutionNumero` = ?");
+                preStatit.setInt(1, resultatVoiture.getInt("VoitureNumero"));
+                resultatInstit = preStatit.executeQuery();
+                while(resultatPropri.next()){
+                    resVoiture[10] = resultatPropri.getString("ProprietaireAdresse");
+                    resVoiture[11] = resultatPropri.getString("ProprietaireMail");
+                }
+                try{
+                    while(resultatPerso.next()){
+                        resVoiture[9] = resultatPerso.getString("PersonnePrenom") + " " + resultatPerso.getString("PersonneNom");
+                    }
+                }catch(SQLException e){
+                    
+                }
+                try{
+                    while(resultatInstit.next()){
+                        resVoiture[9] = resultatInstit.getString("InstitutionLibelle");
+                    }
+                }catch(SQLException e){
+                    
+                }
+                modele.addRow(resVoiture);
+            }
+             //Affichage dans la table
+             jTableVoiture.setModel(modele);
+
+             connectarium.close();
+             
+         }catch(SQLException e){
+            System.err.println("Erreur: " + e);
+         }
+         
+    }
+    
+    //La méthode de gestion du bouton immatriculer
+    private void jButtonImmatriculerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImmatriculerActionPerformed
+        // TODO add your handling code here:
+        boolean verif = false;
+        if("".equals(jTextFieldNumReception.getText()) || "".equals(jTextFieldNumChassis.getText()) || "".equals(jTextFieldSerie.getText()) || "".equals(jTextFieldCNIT.getText())|| "".equals(jTextFieldModele.getText()) || "".equals(jTextFieldMarque.getText()) || "".equals(jTextFieldCarburant.getText()) || "".equals(jTextFieldPoids.getText()) || "".equals(jTextFieldAdresse.getText()) || "".equals(jTextFieldMail.getText())){
+            JOptionPane.showMessageDialog(null, "Veuillez renseigner tous les champs s'il vous plait", "Suggestion", 2);
+        }
+        else{
+            if("".equals(jLabelPlaque.getText())){
+                JOptionPane.showMessageDialog(null, "Vous devez commencer par former le numéro avant d'immatriculer une voiture", "Suggestion", 2);
+            }
+            else{
+                
+                //Récupération du nom de la province
+                int debut = jLabelPlaqueVoiture.getText().length() - 2;
+                int fin = jLabelPlaqueVoiture.getText().length();
+                String codeProvince = jLabelPlaqueVoiture.getText().substring(debut, fin);
+                String nomProvince = new Province(codeProvince).getMneumoniqueProv();
+                Voiture mavoiture;
+                Double poid;
+                String sexe = "";
+                String [] pro = {jTextFieldAdresse.getText(), jTextFieldMail.getText()};
+                //Vérifier si poid est un nombre
+                try{
+                    poid = Double.valueOf(jTextFieldPoids.getText());
+                    poid += 0;
+                    verif = true;
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(null, "Le poid de la voiture doit étre un nombre > 100", "Suggestion", 2);
+                    verif = false;
+                    poid = 0.0;
+                }
+                if(verif == true && poid > 100){
+                    if(jRadioHomme.isSelected()){
+                        sexe = "M";
+                    }
+                    else if(jRadioFemme.isSelected()){
+                        sexe = "F";
+                    }
+                    try {
+                        mavoiture = new Voiture(jLabelPlaqueVoiture.getText(), jTextFieldNumChassis.getText(), jTextFieldSerie.getText(), jTextFieldNumReception.getText(), jTextFieldCNIT.getText(), jTextFieldModele.getText(), jTextFieldMarque.getText(), jTextFieldCarburant.getText(), poid);
+                        if(jRadioInstitution.isSelected()){
+                            if("".equals(voitMneumo)){
+                                JOptionPane.showMessageDialog(null, "Vous devez commencer par former le numéro d'immatriculation pour l'institution \n avant d'immatriculer une voiture", "Suggestion", 2);
+                            }
+                            else{
+                                String [] inst ={jComboInstitution.getSelectedItem().toString(), voitMneumo};
+                                mavoiture.ImmatriculationAvecInstit(pro, inst);
+                                
+                                //Chargement des informations de la voiture d'une institution dans le panel d'impression
+                                jLabelImmatricule.setText(jLabelPlaqueVoiture.getText());
+                                jLabelSerie.setText(jTextFieldSerie.getText());
+                                jLabelChassis.setText(jTextFieldNumChassis.getText());
+                                jLabelReception.setText(jTextFieldNumReception.getText());
+                                jLabelCNIT.setText(jTextFieldCNIT.getText());
+                                jLabelModele.setText(jTextFieldModele.getText());
+                                jLabelMarque.setText(jTextFieldMarque.getText());
+                                jLabelCarburant.setText(jTextFieldCarburant.getText());
+                                jLabelPoids.setText(jTextFieldPoids.getText());
+                                jLabelAdresse.setText(jTextFieldAdresse.getText());
+                                jLabelMail.setText(jTextFieldMail.getText());
+                                //jLabelDate.setText(sexe);
+                                jLabelLieu.setText(nomProvince);
+                                jLabelProprietaire.setText(jComboInstitution.getSelectedItem().toString());
+                                
+                                //Initialisation des champs de la saisie pour l'immatriculation d'une voiture
+                                JOptionPane.showMessageDialog(null, "L'immatriculation de cette voiture est effectué avec succès", "Information", 1);
+                                jRadioPersonne.setEnabled(true);
+                                jLabelPlaqueVoiture.setText("");
+                                jTextFieldNumChassis.setText("");
+                                jTextFieldSerie.setText("");
+                                jTextFieldNumReception.setText("");
+                                jTextFieldCNIT.setText("");
+                                jTextFieldModele.setText("");
+                                jTextFieldMarque.setText("");
+                                jTextFieldCarburant.setText("");
+                                jTextFieldAdresse.setText("");
+                                jTextFieldMail.setText("");
+                                jTextFieldPoids.setText("");
+                                jLabelPlaque.setText("");
+                                jLabelGenerer.setText("");
+                                
+        
+                            }
+                            }
+                        if(jRadioPersonne.isSelected()){
+                            if("".equals(voitMneumo)){
+                                String [] perso = {jTextFieldNom.getText(), jTextFieldPrenom.getText(), sexe, jTextFieldFonction.getText()};
+                                mavoiture.ImmatriculationAvecPerso(pro, perso);
+                                
+                                
+                                //Chargement des informations de la voiture d'une personne dans le panel d'impression
+                                jLabelImmatricule.setText(jLabelPlaqueVoiture.getText());
+                                jLabelSerie.setText(jTextFieldSerie.getText());
+                                jLabelChassis.setText(jTextFieldNumChassis.getText());
+                                jLabelReception.setText(jTextFieldNumReception.getText());
+                                jLabelCNIT.setText(jTextFieldCNIT.getText());
+                                jLabelModele.setText(jTextFieldModele.getText());
+                                jLabelMarque.setText(jTextFieldMarque.getText());
+                                jLabelCarburant.setText(jTextFieldCarburant.getText());
+                                jLabelPoids.setText(jTextFieldPoids.getText());
+                                jLabelProprietaire.setText(jTextFieldPrenom.getText() + " " + jTextFieldNom.getText());
+                                jLabelAdresse.setText(jTextFieldAdresse.getText());
+                                jLabelMail.setText(jTextFieldMail.getText());
+                                jLabelDate.setText(new Tarehe().TareheYaLeo());
+                                jLabelLieu.setText(nomProvince);
+                                
+                                //Initialisation des champs de saisie
+                                JOptionPane.showMessageDialog(null, "L'immatriculation de cette voiture est effectué avec succès", "Information", 1);
+                                jTextFieldNom.setText("");
+                                jTextFieldPrenom.setText("");
+                                jRadioPersonne.setEnabled(true);
+                                jTextFieldFonction.setText("");
+                                jLabelPlaqueVoiture.setText("");
+                                jTextFieldNumChassis.setText("");
+                                jTextFieldSerie.setText("");
+                                jTextFieldNumReception.setText("");
+                                jTextFieldCNIT.setText("");
+                                jTextFieldModele.setText("");
+                                jTextFieldMarque.setText("");
+                                jTextFieldCarburant.setText("");
+                                jTextFieldAdresse.setText("");
+                                jTextFieldMail.setText("");
+                                jRadioHomme.setEnabled(true);
+                                jTextFieldPoids.setText("");
+                                jLabelPlaque.setText("");
+                                jLabelGenerer.setText("");
+        
+                            }
+                            else{
+                                JOptionPane.showMessageDialog(null, "Vous devez commencer par former le numéro d'immatriculation pour les personnes \n avant d'immatriculer une voiture", "Suggestion", 2);
+                            }
+                            }
+                        }
+                        catch (SQLException ex) {
+                            Logger.getLogger(SystemeMobotiNumero.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                }else{
+                    JOptionPane.showMessageDialog(null, "Le poid de la voiture doit étre un nombre > 100", "Suggestion", 2);
+                }    
+            }
+            
+        }
+        try {
+            AfficherVoiture();
+        }catch(Exception e){
+            System.err.println("Erreur: " + e);
+        }
+        
+    }//GEN-LAST:event_jButtonImmatriculerActionPerformed
+
+    //La méthode de l'édition d'une voiture
+    private void jButtonEditerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditerActionPerformed
+        // dans cette méthode, on doit récupérer le vecteur selectionné, en affichant ses éléments dans des inputDialog où l'on peut les modifier
+        ResultSet voitureMod;
+        ResultSet persoMod;
+        ResultSet institMod;
+        PreparedStatement preStatit;
+        DBConnexion baseDonnee;
+        Connection connectarium;
+        String [] pro = new String[3];
+        String [] Pers = new String[4];
+        String [] Ins = new String[2];
+        boolean verif = true;
+        Double poidEdi = 0.0;
+        String receptionEdi;
+        String serieEdi;
+        String chassisEdi;
+        String CNITEdi;
+        String modeleEdi;
+        String marqueEdi;
+        String carburantEdi;
+        String poidMod;
+        int propreNum;
+        int p = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment Editer cette voiture?");
+        if(p == 0){
+            DefaultTableModel modele = (DefaultTableModel)jTableVoiture.getModel();
+            int indexSelectionner = jTableVoiture.getSelectedRow();
+
+            if(indexSelectionner == -1){
+                JOptionPane.showMessageDialog(null, "Aucune voiture n'est sélectionnée. Veuillez sélectionner une, s'il vous plait", "Suggestion", 2);
+            }
+            else{
+                String immaMod = modele.getValueAt(indexSelectionner, 0).toString();
+                String receptionMod = modele.getValueAt(indexSelectionner, 1).toString();
+                String serieMod = modele.getValueAt(indexSelectionner, 2).toString();
+                String chassisMod = modele.getValueAt(indexSelectionner, 3).toString();
+                String CNITMod = modele.getValueAt(indexSelectionner, 4).toString();
+                String modeleMod = modele.getValueAt(indexSelectionner, 5).toString();
+                String marqueMod = modele.getValueAt(indexSelectionner, 6).toString();
+                String carburantMod = modele.getValueAt(indexSelectionner, 7).toString();
+                String provinceMod = modele.getValueAt(indexSelectionner, 8).toString();
+                String adresseMod = modele.getValueAt(indexSelectionner, 10).toString();
+                String mailMod = modele.getValueAt(indexSelectionner, 11).toString();
+                try {
+                baseDonnee = new DBConnexion("ParcVoiture");
+                connectarium = baseDonnee.getConnexion();
+                preStatit = connectarium.prepareStatement("SELECT `VoitureNumero`, `VoiturePoids` FROM `Voiture` WHERE `VoitureNumeroImmatriculation` = ?");
+                preStatit.setString(1, immaMod);
+                voitureMod = preStatit.executeQuery();
+                while(voitureMod.next()){
+                    preStatit = connectarium.prepareStatement("SELECT `PersonneNom`, `PersonnePrenom`, `PersonneSexe`, `PersonneFonction`  FROM `Personne` WHERE `PersonneNumero` = ?");
+                    preStatit.setInt(1, voitureMod.getInt("VoitureNumero"));
+                    persoMod = preStatit.executeQuery();
+                    preStatit = connectarium.prepareStatement("SELECT `InstitutionLibelle`, `InstitutionMneumo` FROM `Institution` WHERE `InstitutionNumero` = ?");
+                    preStatit.setInt(1, voitureMod.getInt("VoitureNumero"));
+                    institMod = preStatit.executeQuery();
+                    receptionEdi = JOptionPane.showInputDialog(null, "Edition de numéro de reception: ", receptionMod);
+                    serieEdi = JOptionPane.showInputDialog(null, "Edition de numéro série: ", serieMod);
+                    chassisEdi = JOptionPane.showInputDialog(null, "Edition de numéro chassis: ", chassisMod);
+                    CNITEdi = JOptionPane.showInputDialog(null, "Edition du CNIT: ", CNITMod);
+                    modeleEdi = JOptionPane.showInputDialog(null, "Edition du modèle: ", modeleMod);
+                    marqueEdi = JOptionPane.showInputDialog(null, "Edition de la marque: ", marqueMod);
+                    carburantEdi = JOptionPane.showInputDialog(null, "Edition du carburant: ", carburantMod);
+                    String provinceEdi = JOptionPane.showInputDialog(null, "Edition de la province: ", provinceMod);
+                    do{
+                        poidMod = JOptionPane.showInputDialog(null, "Edition du poid de la voiture: ", voitureMod.getDouble("VoiturePoids"));
+                        poidEdi = Double.valueOf(poidMod); 
+                        try{
+                            poidEdi += 0;
+                            verif = false;
+                        }catch(Exception exp){
+                            JOptionPane.showInputDialog(null,"Le poids de la voiture doit être un réel supérieur à 100: ", "Erreur", 0);
+                            System.err.println("Erreur: " + exp);
+                        }
+                    }while(verif || poidEdi < 101);
+                    propreNum = voitureMod.getInt("VoitureNumero");
+                    try{
+                        while(persoMod.next()){
+                            String nomEdi = JOptionPane.showInputDialog(null, "Edition du nom de propriétaire: ", persoMod.getString("PersonneNom"));
+                            String prenomEdi = JOptionPane.showInputDialog(null, "Edition du prénom de propriétaire: ", persoMod.getString("PersonnePrenom"));
+                            String sexeEdi = JOptionPane.showInputDialog(null, "Edition du sexe de propriétaire: ", persoMod.getString("PersonneSexe"));
+                            String fonctionEdi = JOptionPane.showInputDialog(null, "Edition de la fonction de prpriétaire: ", persoMod.getString("PersonneFonction"));
+                            sexeEdi = sexeEdi.toUpperCase();
+                            if(sexeEdi == "F" || sexeEdi == "FEMININ"){
+                                sexeEdi = "F";
+                            }
+                            else if("M".equals(sexeEdi) || "MASCULIN".equals(sexeEdi)){
+                                sexeEdi = "M";
+                            }
+                            else{
+                                sexeEdi = persoMod.getString("PersonneSexe");
+                            }
+                            Pers[0] = nomEdi;
+                            Pers[1] = prenomEdi;
+                            Pers[2] = sexeEdi;
+                            Pers[3] = fonctionEdi;
+                        }
+                    }catch(Exception e){
+                        System.err.println("Erreur: " + e);
+                    }
+                    String adresseEdi = JOptionPane.showInputDialog(null, "Edition de l'adresse de propriétaire: ", adresseMod);
+                    String mailEdi = JOptionPane.showInputDialog(null, "Edition du mail de propriétaire: ", mailMod);
+                    pro[0] = adresseEdi;
+                    pro[1] = mailEdi;
+                    pro[2] = provinceEdi;
+                    try{
+                        while(institMod.next()){
+                            String libelleEdi = JOptionPane.showInputDialog(null, "Edition du nom de l'institution: ", institMod.getString("InstitutionLibelle"));
+                            String codeInst = new Institution(adresseEdi, mailEdi, libelleEdi.toLowerCase()).NumeroFormation();
+                            if("".equals(codeInst)){
+                                libelleEdi = institMod.getString("InstitutionLibelle");
+                                codeInst = institMod.getString("InstitutionMneumo");
+                            }
+                            else{
+                                int debut = immaMod.length() - 9;
+                                String NumIm = immaMod.substring(debut, immaMod.length());
+                                immaMod = codeInst + NumIm;
+                            }
+                            Ins[0] = libelleEdi;
+                            Ins[1] = codeInst;
+                        }
+
+                    }catch(Exception exp){
+                        System.err.println("Erreur: " + exp);
+                    }
+                    if("".equals(immaMod) || "".equals(chassisEdi) || "".equals(serieEdi) || "".equals(receptionEdi) || "".equals(CNITEdi) || "".equals(modeleEdi) || "".equals(marqueEdi) || "".equals(carburantEdi) || "".equals(pro[0]) || "".equals(pro[1])){
+                        JOptionPane.showMessageDialog(null, "Certaines informations pertinentes ne sont pas fournies. \n Veuillez fournir toutes les informations s'il vous plait", "Suggestion", 2);
+                    }
+                    else{
+                        Voiture maDeuxVoiture = new Voiture(immaMod, chassisEdi, serieEdi, receptionEdi, CNITEdi, modeleEdi, marqueEdi, carburantEdi, poidEdi);
+                        try{
+                            maDeuxVoiture.ModificationAvecInstit(pro, Ins, propreNum);
+                        }catch(Exception exp){
+                            System.err.println("Erreur: " + exp);
+                        }
+                        try{
+                            maDeuxVoiture.ModificationAvecInstit(pro, Pers, propreNum);
+                        }catch(Exception exp){
+                            System.err.println("Erreur: " + exp);
+                        }
+                    }
+                    AfficherVoiture();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(SystemeMobotiNumero.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            }
+        }
+    }//GEN-LAST:event_jButtonEditerActionPerformed
+
+    //La méthode de la suppression d'une voiture
+    private void jButtonSupprimerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSupprimerActionPerformed
+        ResultSet voitureMod;
+        PreparedStatement preStatit;
+        DBConnexion baseDonnee;
+        Connection connectarium;
+        int p = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer cette voiture?");
+        if(p == 0){
+            DefaultTableModel modele = (DefaultTableModel)jTableVoiture.getModel();
+            int indexSelectionner = jTableVoiture.getSelectedRow();
+
+            if(indexSelectionner == -1){
+                JOptionPane.showMessageDialog(null, "Aucune voiture n'est sélectionnée. Veuillez sélectionner une, s'il vous plait", "Suggestion", 2);
+            }
+            else{
+                //On récupère ces informations pour enfin les passer en parametre en appelant la classe voiture qui contient la méthode qui nous permettra de supprimer une voiture
+                String immaMod = modele.getValueAt(indexSelectionner, 0).toString();
+                String receptionMod = modele.getValueAt(indexSelectionner, 1).toString();
+                String serieMod = modele.getValueAt(indexSelectionner, 2).toString();
+                String chassisMod = modele.getValueAt(indexSelectionner, 3).toString();
+                String CNITMod = modele.getValueAt(indexSelectionner, 4).toString();
+                String modeleMod = modele.getValueAt(indexSelectionner, 5).toString();
+                String marqueMod = modele.getValueAt(indexSelectionner, 6).toString();
+                String carburantMod = modele.getValueAt(indexSelectionner, 7).toString();
+                try {
+                    //Etablissement de la connexion pour récupérer les informations supplémentaire pour les passage en argument lors de l'appel de la classe voiture
+                    baseDonnee = new DBConnexion("ParcVoiture");
+                    connectarium = baseDonnee.getConnexion();
+                    preStatit = connectarium.prepareStatement("SELECT `VoiturePoids` FROM `Voiture` WHERE `VoitureNumeroImmatriculation` = ?");
+                    preStatit.setString(1, immaMod); 
+                    voitureMod = preStatit.executeQuery();
+                    while(voitureMod.next()){
+                        Double poids = voitureMod.getDouble("VoiturePoids");
+                        Voiture maTroisVoiture = new Voiture(immaMod, chassisMod, serieMod, receptionMod, CNITMod, modeleMod, marqueMod, carburantMod, poids);
+                        maTroisVoiture.Usure(immaMod);
+                        AfficherVoiture();
+                    }
+                }catch(Exception exp){
+                    System.err.println("Erreur: " + exp);
+                }
+
+            }
+            }
+    }//GEN-LAST:event_jButtonSupprimerActionPerformed
+
+
+    //La methode de l'impression du certificat d'immatriculation en passant par la génération d'un document souvent du format pdf
+    private void jButtonImprimerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImprimerActionPerformed
+        PrinterJob jobe = PrinterJob.getPrinterJob();
+        jobe.setJobName("Print Component");
+        jobe.setPrintable(new Printable(){
+            public int print(Graphics g, PageFormat pf, int page) throws PrinterException {
+                if (page > 0) {
+                  return Printable.NO_SUCH_PAGE;
+                }
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.translate(pf.getImageableX(), pf.getImageableY());
+               jPanelCertificat.printAll(g);
+                return Printable.PAGE_EXISTS;
+            }
+           });
+        boolean verifier = jobe.printDialog();
+        if (verifier) {
+          try {
+            jobe.print();
+          } catch (PrinterException ex) {
+         }
+        }
+        
+        //Initialisation des champs de l'impression d'une voiture
+        jLabelImmatricule.setText("");
+        jLabelSerie.setText("");
+        jLabelChassis.setText("");
+        jLabelReception.setText("");
+        jLabelCNIT.setText("");
+        jLabelModele.setText("");
+        jLabelMarque.setText("");
+        jLabelCarburant.setText("");
+        jLabelPoids.setText("");
+        jLabelProprietaire.setText("");
+        jLabelAdresse.setText("");
+        jLabelMail.setText("");
+        //jLabelDate.setText(sexe);
+        jLabelLieu.setText("");
+
+    }//GEN-LAST:event_jButtonImprimerActionPerformed
+
+    //Cette méthode permet le remplissant de tous les champs du certificat d'immatriculation d'une voiture à partir de son numéro d'immatriculation
+    private void jButtonElaborerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonElaborerActionPerformed
+        String mot = JOptionPane.showInputDialog(null, "Entrer le numéro d'immatriculation de la voiture que vous obtenir le certificat, svp: ");
+        ResultSet voitureMod;
+        ResultSet persoMod;
+        ResultSet institMod;
+        ResultSet propreEla;
+        PreparedStatement preStatit;
+        DBConnexion baseDonnee;
+        Connection connectarium;
+        try {
+            baseDonnee = new DBConnexion("ParcVoiture");
+            connectarium = baseDonnee.getConnexion();
+            preStatit = connectarium.prepareStatement("SELECT * FROM `Voiture` WHERE `VoitureNumeroImmatriculation` = ?");
+            preStatit.setString(1, mot);
+            voitureMod = preStatit.executeQuery();
+            while(voitureMod.next()){
+                if(voitureMod.getString("VoitureNumeroImmatriculation") == null || "".equals(voitureMod.getString("VoitureNumeroImmatriculation"))){
+                    JOptionPane.showMessageDialog(null, "Aucune voiture n'a ce numéro d'immatriculation.", "Suggestion", 2);
+                }else{
+                    preStatit = connectarium.prepareStatement("SELECT `PersonneNom`, `PersonnePrenom` FROM `Personne` WHERE `PersonneNumero` = ?");
+                    preStatit.setInt(1, voitureMod.getInt("VoitureNumero"));
+                    persoMod = preStatit.executeQuery();
+
+                    try{
+                        while(persoMod.next()){
+                            jLabelProprietaire.setText(persoMod.getString("PersonnePrenom") + " " + persoMod.getString("PersonneNom"));
+                        }
+                    }catch(Exception exp){
+                        System.err.println("Erreur " + exp + " est survenue");
+                    }
+                    preStatit = connectarium.prepareStatement("SELECT `InstitutionLibelle` FROM `Institution` WHERE `InstitutionNumero` = ?");
+                    preStatit.setInt(1, voitureMod.getInt("VoitureNumero"));
+                    institMod = preStatit.executeQuery();
+                    try{
+                        while(institMod.next()){
+                            jLabelProprietaire.setText(institMod.getString("InstitutionLibelle"));
+                        }
+                    }catch(Exception exp){
+                        System.err.println("Erreur " + exp + " est survenue");
+                    }
+
+                    preStatit = connectarium.prepareStatement("SELECT `ProprietaireAdresse`, `ProprietaireMail` FROM `Proprietaire` WHERE `ProprietaireNumero`  = ?");
+                    preStatit.setInt(1, voitureMod.getInt("VoitureNumero"));
+                    propreEla = preStatit.executeQuery();
+                    while(propreEla.next()){
+                        jLabelAdresse.setText(propreEla.getString("ProprietaireAdresse"));
+                        jLabelMail.setText(propreEla.getString("ProprietaireMail"));
+                    }
+
+                    //Chargement des informations de la voiture d'une personne dans le panel d'impression
+                    jLabelImmatricule.setText(voitureMod.getString("VoitureNumeroImmatriculation"));
+                    jLabelSerie.setText(voitureMod.getString("VoitureNumeroSerie"));
+                    jLabelChassis.setText(voitureMod.getString("VoitureNumeroChassis"));
+                    jLabelReception.setText(voitureMod.getString("VoitureNumeroReception"));
+                    jLabelCNIT.setText(voitureMod.getString("VoitureCNIT"));
+                    jLabelModele.setText(voitureMod.getString("VoitureModele"));
+                    jLabelMarque.setText(voitureMod.getString("VoitureMarque"));
+                    jLabelCarburant.setText(voitureMod.getString("VoitureCarburant"));
+                    jLabelPoids.setText(Double.toString(voitureMod.getDouble("VoiturePoids")));
+                    
+                    
+                    //Récupération est affichage de la date
+                    jLabelDate.setText(new Tarehe().TareheYaLeo());
+
+                    //Récupération du nom de la province
+                    int debut = voitureMod.getString("VoitureNumeroImmatriculation").length() - 2;
+                    int fin = voitureMod.getString("VoitureNumeroImmatriculation").length();
+                    String codeProvince = voitureMod.getString("VoitureNumeroImmatriculation").substring(debut, fin);
+                    String nomProvince = new Province(codeProvince).getMneumoniqueProv();
+                    jLabelLieu.setText(nomProvince);   
+                    }
+            }
+        }catch(Exception exp){
+            System.err.print("Erreur: " + exp + " est survenue lors d'élaboration du certificat");
+        }
+           
+    }//GEN-LAST:event_jButtonElaborerActionPerformed
 
     /**
      * @param args the command line arguments
      */
+    /*
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+         
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -803,13 +1821,14 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ACCUEIL().setVisible(true);
-            }
+        /*java.awt.EventQueue.invokeLater(() -> {
+            new SystemeMobotiNumero().setVisible(true);
         });
+        
     }
-
+    */
+    private String voitMneumo;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane TabAccueil;
     private javax.swing.JDesktopPane TabBordereau;
@@ -825,6 +1844,7 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
     private javax.swing.JButton jButtonFormer;
     private javax.swing.JButton jButtonGenerer;
     private javax.swing.JButton jButtonImmatriculer;
+    private javax.swing.JButton jButtonImprimer;
     private javax.swing.JButton jButtonSupprimer;
     private javax.swing.JComboBox jComboInstitution;
     private javax.swing.JComboBox jComboProvince;
@@ -843,25 +1863,57 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelAdresse;
+    private javax.swing.JLabel jLabelCNIT;
+    private javax.swing.JLabel jLabelCarburant;
+    private javax.swing.JLabel jLabelChassis;
+    public static javax.swing.JLabel jLabelDate;
     public static javax.swing.JLabel jLabelFonction;
     public static javax.swing.JLabel jLabelFormer;
     public static javax.swing.JLabel jLabelGenerer;
+    private javax.swing.JLabel jLabelImmatricule;
     private javax.swing.JLabel jLabelInstitution;
+    private javax.swing.JLabel jLabelLieu;
+    private javax.swing.JLabel jLabelLieu1;
+    private javax.swing.JLabel jLabelMail;
+    private javax.swing.JLabel jLabelMarque;
+    private javax.swing.JLabel jLabelModele;
     public static javax.swing.JLabel jLabelNom;
     public static javax.swing.JLabel jLabelPlaque;
     private javax.swing.JLabel jLabelPlaqueVoiture;
+    private javax.swing.JLabel jLabelPoids;
     public static javax.swing.JLabel jLabelPrenom;
+    private javax.swing.JLabel jLabelProprietaire;
+    private javax.swing.JLabel jLabelReception;
+    private javax.swing.JLabel jLabelSerie;
     public static javax.swing.JLabel jLabelSexe;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -869,28 +1921,28 @@ public class SystemeMobotiNumero extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
+    public static javax.swing.JPanel jPanelCertificat;
     public static javax.swing.JPanel jPanelPersonne;
     public static javax.swing.JRadioButton jRadioFemme;
     public static javax.swing.JRadioButton jRadioHomme;
-    private javax.swing.JRadioButton jRadioInstitution;
-    private javax.swing.JRadioButton jRadioPersonne;
+    public static javax.swing.JRadioButton jRadioInstitution;
+    public static javax.swing.JRadioButton jRadioPersonne;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     public static javax.swing.JTable jTableVoiture;
-    private javax.swing.JTextField jTextFieldAdresse;
+    public static javax.swing.JTextField jTextFieldAdresse;
+    private javax.swing.JTextField jTextFieldCNIT;
     private javax.swing.JTextField jTextFieldCarburant;
     public static javax.swing.JTextField jTextFieldFonction;
-    private javax.swing.JTextField jTextFieldMail;
+    public static javax.swing.JTextField jTextFieldMail;
     private javax.swing.JTextField jTextFieldMarque;
     private javax.swing.JTextField jTextFieldModele;
     public static javax.swing.JTextField jTextFieldNom;
+    private javax.swing.JTextField jTextFieldNumChassis;
     private javax.swing.JTextField jTextFieldNumReception;
-    private javax.swing.JTextField jTextFieldNumReception1;
-    private javax.swing.JTextField jTextFieldNumReception2;
-    private javax.swing.JTextField jTextFieldNumReception3;
     private javax.swing.JTextField jTextFieldPoids;
     public transient javax.swing.JTextField jTextFieldPrenom;
+    private javax.swing.JTextField jTextFieldSerie;
     private javax.swing.JTextPane jTextPaneDocumentation;
     // End of variables declaration//GEN-END:variables
 }
